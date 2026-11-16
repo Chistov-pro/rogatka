@@ -70,14 +70,21 @@
   ul{list-style:none;}
   .container{max-width:1280px;margin:0 auto;padding:0 var(--container-padding);width:100%;}
 
-  /* ФОН */
+  /* ФОН: Вариант 1 (На весь сайт с блюром) */
   .bg-snow{
     position:fixed; inset:0; z-index:0; pointer-events:none;
-    background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, #E3F1FD 0%, transparent 70%),
-      radial-gradient(ellipse 60% 40% at 10% 100%, #EAF6FF 0%, transparent 60%),
-      radial-gradient(ellipse 50% 40% at 95% 90%, #E7F3FC 0%, transparent 60%),
-      var(--bg);
+    /* Твое фото */
+    background-image: url('cta-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+  }
+  .bg-snow::before{
+    /* Белая пленка поверх фото, чтобы карточки не сливались */
+    content:''; position:absolute; inset:0;
+    background: rgba(244, 248, 252, 0.85); /* 85% белого */
+    backdrop-filter: blur(6px); /* Легкий блюр */
+    -webkit-backdrop-filter: blur(6px);
   }
   .bg-snow::before{
     content:''; position:absolute; inset:0;
