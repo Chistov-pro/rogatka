@@ -1245,9 +1245,8 @@
     var formData = new FormData(orderForm);
     formData.append('selected_product', formSelected.textContent);
 
-     // Отправка дубля заявки в Telegram
-    var tgToken = '9104528740:AAF3SEU0E5Saf9Fuz_PQeIpzbHBV0M6BjJQ';
-    var tgChatId = '939508076';
+     / Отправка дубля заявки в Telegram через Google Apps Script (работает без VPN)
+    var googleScriptUrl = 'https://script.google.com/macros/s/AKfycbzCZ8VkjBbJsLWJn47bW_bM4Oe_l8aeoQq0QrVj-icckw8ZIwcY0lJkcMR_We_4y48b/exec';
     var clientName = orderForm.querySelector('[name="name"]').value;
     var clientPhone = orderForm.querySelector('[name="phone"]').value;
     var tgText = '🛒 Новый заказ с сайта всерогатки.рф!\n\n'
@@ -1255,13 +1254,11 @@
                + '👤 Имя: ' + clientName + '\n'
                + '📞 Телефон: ' + clientPhone;
 
-    fetch('https://api.telegram.org/bot' + tgToken + '/sendMessage', {
+    fetch(googleScriptUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: tgChatId,
-        text: tgText
-      })
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ text: tgText })
     }).catch(function(){});
      
     fetch('https://api.web3forms.com/submit', {
