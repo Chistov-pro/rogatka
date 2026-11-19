@@ -831,6 +831,8 @@
     <p class="form-subtitle">Оставьте имя и телефон — мы свяжемся и уточним детали.</p>
     <div class="form-selected" id="formSelected"></div>
     <form id="orderForm" novalidate>
+        <input type="hidden" name="access_key" value="ВАШ_КЛЮЧ_ИЗ_WEB3FORMS">
+  <input type="hidden" name="subject" value="Новый заказ с сайта всерогатки.рф">
       <div class="form-warning">
         <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
         <div>Внимание: стандартный вариант (95 мм) подходит только для <strong>однозаходных</strong> шнеков. Для двузаходных нужна версия 105 мм (изготовим под заказ).</div>
@@ -1232,23 +1234,43 @@
     checkValid();
   });
 
-  orderForm.addEventListener('submit', function(e){
+   orderForm.addEventListener('submit', function(e){
     e.preventDefault();
     orderForm.dataset.tried = '1';
     if (!fConsent.checked){ consentLabel.classList.add('is-invalid'); return; }
     if (formSubmit.disabled) return;
     formSubmit.disabled = true;
-    formSubmit.textContent = 'Отправляем…';
-    setTimeout(function(){
-      closeForm();
-      orderForm.reset();
+    formSubmit.textContent = 'Отправляем...';
+
+    var formData = new FormData(orderForm);
+    formData.append('selected_product', formSelected.textContent);
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: formData
+    })
+    .then(function(response){ return response.json(); })
+    .then(function(data){
+      if (data.success) {
+        closeForm();
+        orderForm.reset();
+        formSubmit.textContent = 'Купить';
+        formSubmit.disabled = true;
+        consentLabel.classList.remove('is-invalid');
+        orderForm.dataset.tried = '';
+        thanksOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      } else {
+        alert('Ошибка при отправке: ' + (data.message || 'попробуйте ещё раз'));
+        formSubmit.textContent = 'Купить';
+        formSubmit.disabled = false;
+      }
+    })
+    .catch(function(){
+      alert('Не удалось отправить заявку. Проверьте подключение к интернету.');
       formSubmit.textContent = 'Купить';
-      formSubmit.disabled = true;
-      consentLabel.classList.remove('is-invalid');
-      orderForm.dataset.tried = '';
-      thanksOverlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }, 700);
+      formSubmit.disabled = false;
+    });
   });
 
   thanksClose.addEventListener('click', function(){
