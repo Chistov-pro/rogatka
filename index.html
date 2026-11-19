@@ -1245,7 +1245,7 @@
     var formData = new FormData(orderForm);
     formData.append('selected_product', formSelected.textContent);
 
-     / Отправка дубля заявки в Telegram через Google Apps Script (работает без VPN)
+     // Отправка дубля заявки в Telegram через Google Apps Script (работает без VPN)
     var googleScriptUrl = 'https://script.google.com/macros/s/AKfycbzCZ8VkjBbJsLWJn47bW_bM4Oe_l8aeoQq0QrVj-icckw8ZIwcY0lJkcMR_We_4y48b/exec';
     var clientName = orderForm.querySelector('[name="name"]').value;
     var clientPhone = orderForm.querySelector('[name="phone"]').value;
