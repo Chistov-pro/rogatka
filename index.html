@@ -1245,6 +1245,25 @@
     var formData = new FormData(orderForm);
     formData.append('selected_product', formSelected.textContent);
 
+     // Отправка дубля заявки в Telegram
+    var tgToken = '9104528740:AAF3SEU0E5Saf9Fuz_PQeIpzbHBV0M6BjJQ';
+    var tgChatId = '939508076';
+    var clientName = orderForm.querySelector('[name="name"]').value;
+    var clientPhone = orderForm.querySelector('[name="phone"]').value;
+    var tgText = '🛒 Новый заказ с сайта всерогатки.рф!\n\n'
+               + '📦 Товар: ' + formSelected.textContent + '\n'
+               + '👤 Имя: ' + clientName + '\n'
+               + '📞 Телефон: ' + clientPhone;
+
+    fetch('https://api.telegram.org/bot' + tgToken + '/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: tgChatId,
+        text: tgText
+      })
+    }).catch(function(){});
+     
     fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       body: formData
